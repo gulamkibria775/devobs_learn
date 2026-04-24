@@ -1,5 +1,6 @@
-day1:
-## ✅ Day 01: Devops fundamental
+
+## ####### Day 01: Devops fundamental ##########
+
 Todays video with cover the following things:
  - What is DevOps?
  - SDLC vs DevOps,
@@ -113,3 +114,410 @@ Scenario: Deploy a Node.js App using DevOps
 
 
 
+
+
+
+############################ day 2 : Linux File System & Commands (Hands-on)#########################
+
+
+What is Linux File System?
+
+The Linux file system is hierarchical, starting with the root directory /. Everything in Linux — files, folders, devices — starts from /. It's like the 'C: drive' in Windows but more structured.
+🎯 Show this simple hierarchy:
+
+/
+├── bin
+├── boot
+├── dev
+├── etc
+├── home
+├── lib
+├── opt
+├── root
+├── tmp
+├── usr
+└── var
+
+🗣 Quick Explanation of Each:
+
+    /bin: essential binary commands
+    /home: user directories
+    /etc: system configurations
+    /var: variable files (logs, mail)
+    /root: root user's home
+    /tmp: temporary files
+
+Hands-On: Basic Navigation Commands
+
+📺 Show terminal screen and demonstrate:
+
+pwd          # Print current directory
+ls           # List files
+ls -l        # Detailed list
+ll           # details( who create he see)
+ls -la       # details
+cd /etc      # Change directory
+cd ~         # Go back to home
+mkdir test   # Make directory
+touch file1  # Create a file
+rm file1     # Remove file
+rmdir test   # Remove directory( with empty file)
+rmdir -r test # not empty file
+
+Hands-On: Viewing & Editing Files
+
+Examples:
+
+cat /etc/os-release        # View content of a file
+less /var/log/syslog       # View file with scroll
+q                          # exit
+vi testfile.txt            # Edit with vi editor
+i                           #insert
+esc shift : wq              # save and exit
+esc shift :q!               # without save exit
+
+
+cat quickly displays file content. If it's long, use less to scroll. To edit, you can use vi
+Creating Users
+
+sudo adduser dhaka
+sudo passwd dhaka
+
+Switch user and try:
+
+su - dhaka
+sudo apt update
+
+Hands-On: File Permissions & Ownership
+
+ls -l file.txt              # See permissions
+chmod 755 file.txt          # Change permission
+chown user:user file.txt    # Change ownership
+sudo chmod o+w dhaka        # give access
+sudo chmod o-w dhaka        # not access
+sudo chmod +x dhaka         # all access (for execute fill for sell scripting)
+
+Linux permissions are powerful. chmod changes who can read, write, or execute a file. chown changes the file owner.
+Explain basic permission structure: rwxr-xr-x
+
+Every file and directory in Linux has a set of permissions that control who can read, write, or execute it. 📄 Basic Format (Using ls -l):
+When you run:
+
+ls -l file.txt
+
+You’ll see something like:
+
+-rwxr-xr--  1 user group  1024 Jul 19 10:00 file.txt
+
+Let’s break it down:
+
+ -rwxr-xr--
+ │ │ |  │ 
+ │ │ │  └── Other (Everyone else)
+ │ │ └──── Group
+ │ └─────── Owner (User)
+ └───────── File type
+
+🧩 Explanation:
+Symbol 	Meaning
+- 	File (can also be d for directory)
+r 	Read permission (view content)
+w 	Write permission (edit/delete)
+x 	Execute permission (run file)
+- 	No permission
+
+Example Breakdown: -rwxr-xr--
+Section 	Permissions 	Who it Applies To
+rwx 	Read, write, execute 	Owner (can do everything)
+r-x 	Read, execute 	Group (can read & run)
+r-- 	Read only 	Others (public access)
+🛠 Changing Permissions
+
+You use the chmod command to change permissions.
+🔧 Symbolic Mode:
+
+chmod u+x script.sh      # Add execute to user (owner)
+chmod g-w file.txt       # Remove write from group
+chmod o+r file.txt       # Add read for others
+
+🔢 Numeric Mode:
+
+chmod 755 script.sh
+
+Breakdown of 755:
+
+    7 = rwx (Owner)
+    5 = r-x (Group)
+    5 = r-x (Others)
+
+Value 	Meaning
+0 	---
+1 	--x
+2 	-w-
+3 	-wx
+4 	r--
+5 	r-x
+6 	rw-
+7 	rwx
+👑 Changing Ownership
+
+chown user:group file.txt
+
+user delete command
+
+userdel t2 	        # delete user without remove its directory and file
+userdel t2 -r	      # delete user with remove its all directory and file such as /home/t2                     
+rm -f dhaka
+rm  -fr folder
+
+add user to sudo group
+
+add this user to sudo group
+# usermod -aG sudo rajiv1
+
+without logout and login access sudo
+
+newgrp sudo
+
+user give permission without passowrd
+
+sudo vi /etc/sudoers
+
+dhaka ALL=(ALL) NOPASSWD: ALL
+
+"Now let’s switch to dhaka and test if the user can run sudo commands. This is often done when giving limited admin access to DevOps team members.
+Hands-On Test: Restricted vs Sudo User
+Real-World Scenario: Team Setup
+
+In real DevOps teams, you may want to give developers access to deploy scripts but not full root access. You can use groups + restricted sudo rules for this.
+Understanding Sudo and Sudoers
+
+View and safely edit sudoers file:
+
+sudo vi /etc/sudoers
+
+Add:
+
+dhaka ALL=(ALL) NOPASSWD: ALL
+
+sudo lets a user run commands as root. Safely edit the file with nano or vim. if anything rong — it can break your system.
+Creating and Managing Groups
+
+sudo groupadd devops
+sudo usermod -aG devops rajiv
+groups rajiv
+
+Groups allow us to assign access to a set of users. Here, we added rajiv to the devops group.
+Understanding File Permissions
+
+Create a file and show:
+
+touch sample.txt
+ls -l sample.txt
+chmod 640 sample.txt
+chown rajiv:devops sample.txt
+
+chmod changes permission. 640 means: owner can read/write, group can read, others have no access. chown changes ownership.
+Practical Scenario: Create User & Set Permissions
+
+Let's create a new user devopsuser, give them a project folder, and make sure only they can access it. This is a common task in DevOps when setting up teams.
+
+sudo adduser devopsuser
+sudo mkdir /opt/project
+sudo chown devopsuser /opt/project
+sudo chmod 700 /opt/project
+
+File system check
+
+df -h
+df -hT
+
+✅ Summary:
+Command 	Purpose
+ls -l 	View permissions
+chmod 	Change file permissions
+chown 	Change file owner/group
+
+
+############### Day-03 Networking, SSH, SCP, curl, wget – Explained with Examples#############
+
+
+🌐 1. Networking Basics (in DevOps Context)
+
+Networking is the backbone of communication between servers, services, and users.
+
+Common Terms:
+
+    IP Address – Unique identifier for a device on a network.
+    DNS – Translates domain names to IP addresses.
+    Port – Logical endpoint for communication (e.g., port 80 for HTTP).
+    Ping – Tests network connectivity to a host.
+    Traceroute – Shows the path packets take to a host.
+        if pkackage not avaible then install sudo apt install traceroute
+
+✅ Example:
+
+ping google.com
+traceroute www.google.com
+
+Output:
+
+PING google.com (142.250.190.14): 56 data bytes
+64 bytes from 142.250.190.14: icmp_seq=0 ttl=117 time=10.2 ms
+
+We can login any server by username and password OR SSH key and SSH key is recommended one
+🔐 2. SSH (Secure Shell)
+Create public key and private key
+
+ssh-keygen
+
+Create ssh public key name ansible
+
+ssh-keygen -t rsa -f ~/.ssh/ansible
+
+Location and file where the public key is save
+
+ .ssh/authorized_keys
+
+Copy the public key to a remote host
+
+ssh-copy-id rajiv@192.168.30.11
+
+OR
+we can copy the public key and pest it to the authorized_keys file .ssh/authorized_keys
+Copy the public key which is available is a specific location
+
+ssh-copy-id -i /home/thor/.ssh/ansible ansible@web1
+
+SSH allows secure remote login and command execution on remote servers. ✅ Syntax:
+
+ssh user@hostname
+
+✅ Example:
+
+ssh ubuntu@54.210.12.34
+
+    Connects to an EC2 instance or remote server securely.
+    Requires SSH key or password authentication.
+
+📂 3. SCP (Secure Copy Protocol)
+
+SCP copies files securely between local and remote systems over SSH.
+
+scp [source] [destination]
+
+✅ Example:
+
+scp -i my-key d.txt ubuntu@98.84.100.244:/home/ubuntu/
+scp myfile.txt ubuntu@54.210.12.34:/home/ubuntu/
+
+Copies myfile.txt to a remote EC2 instance.
+✅ Reverse:
+
+scp -i my-key d.txt ubuntu@98.84.100.244:/home/ubuntu/dd.txt .
+
+    Downloads the file from the server to your local machine.
+
+🌍 4. curl (Client URL)
+
+✅ Syntax:
+
+curl [options] [URL]
+
+✅ Example:
+
+curl https://jsonplaceholder.typicode.com/posts/1
+
+Output (JSON):
+
+{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere...",
+  "body": "quia et suscipit..."
+}
+
+✅ Upload a file using POST:
+
+curl -X POST -F "file=@myfile.txt" http://example.com/upload
+
+⬇️ 5. wget (Web Get)
+
+wget is used to download files from the web. ✅ Syntax:
+
+wget [URL]
+
+✅ Example:
+
+wget https://example.com/file.zip
+wget https://dlcdn.apache.org/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
+
+    Downloads file.zip from the URL to your current directory.
+
+✅ Download in the background:
+
+wget -b https://example.com/largefile.iso
+
+🧠 Summary Table
+Tool 	Purpose 	Example Command
+ping 	Check network connectivity 	ping google.com
+ssh 	Connect to a remote server 	ssh ubuntu@<server-ip>
+scp 	Copy files securely 	scp file.txt ubuntu@<ip>:/home/ubuntu/
+curl 	Fetch data from APIs/web servers 	curl https://api.github.com/users
+wget 	Download files from the web 	wget https://example.com/file.zip
+nslookup 	domin name query 	nslookup www.google.com
+dig 	domin name query 	dig www.google.com
+✅ Real-world Use Case (DevOps Scenario)
+
+    You're deploying an app to an AWS EC2 instance:
+        Use ssh to access the EC2 instance.
+        Use scp to copy your code to the server.
+        Use curl to test the API endpoints after deployment.
+        Use ping or traceroute to troubleshoot if the app isn’t reachable.
+        Use wget to download dependencies or install scripts from external sources.
+
+commonly used ports in DevOps
+🔗 Networking & SSH
+Service 	Default Port 	Protocol 	Notes
+SSH 	22 	TCP 	Remote shell access
+HTTP 	80 	TCP 	Unencrypted web traffic
+HTTPS 	443 	TCP 	Encrypted web traffic (TLS)
+🗄️ Databases
+Database 	Default Port 	Protocol 	Notes
+MySQL/MariaDB 	3306 	TCP 	Relational database
+PostgreSQL 	5432 	TCP 	Relational database
+MongoDB 	27017 	TCP 	NoSQL database
+Redis 	6379 	TCP 	In-memory key-value store
+Elasticsearch 	9200 	TCP 	Search engine HTTP API
+Cassandra 	9042 	TCP 	NoSQL DB using CQL
+Kafka (broker) 	9092 	TCP 	Apache Kafka
+🧪 CI/CD Tools
+Tool 	Default Port 	Protocol 	Notes
+Jenkins 	8080 	TCP 	CI/CD server UI
+GitLab (web) 	80/443/22 	TCP 	Git over HTTPS/SSH
+SonarQube 	9000 	TCP 	Code quality scanner
+Nexus/Artifactory 	8081 	TCP 	Artifact repository manager
+📈 Monitoring & Logging
+Tool 	Default Port 	Protocol 	Notes
+Prometheus 	9090 	TCP 	Metrics collection
+Grafana 	3000 	TCP 	Visualization dashboards
+Alertmanager 	9093 	TCP 	Prometheus alerting
+Loki (Grafana) 	3100 	TCP 	Logs backend for Grafana
+Fluentd 	24224 	TCP 	Log collector
+Graylog Web UI 	9000 	TCP 	Logging dashboard
+Kibana 	5601 	TCP 	Elasticsearch dashboard
+Logstash 	5044 	TCP 	Log processing (input)
+Zabbix Server 	10051 	TCP 	Monitoring tool
+☸️ Container & Orchestration
+Service 	Default Port 	Protocol 	Notes
+Docker Engine API 	2375/2376 	TCP 	Non-TLS/TLS (respectively)
+Kubernetes API 	6443 	TCP 	Control plane access
+etcd 	2379–2380 	TCP 	Kubernetes DB backend
+kubelet 	10250 	TCP 	Node agent in Kubernetes
+💻 Dev Tools & Misc
+Service 	Default Port 	Protocol 	Notes
+VNC 	5900 	TCP 	Remote desktop sharing
+SMTP (mail) 	25, 465, 587 	TCP 	Email sending
+FTP 	21 	TCP 	File transfer protocol
+DNS 	53 	UDP/TCP 	Domain name system
+NTP 	123 	UDP 	Time sync
